@@ -25,10 +25,7 @@ def process_file(filename):
     return itertools.imap(process_feature, json_doc['features'])
 
 def save_doc(doc, name,  basepath):
-    try:
-        filename = os.path.join(basepath, name +'.geojson')
-    except Exception as e:
-        import pdb; pdb.set_trace()
+    filename = os.path.join(basepath, name +'.geojson')
 
     with open(filename, 'w') as f:
         f.write(json.dumps(doc))
