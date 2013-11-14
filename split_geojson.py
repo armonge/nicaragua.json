@@ -15,7 +15,6 @@ def process_feature(feature):
         'features': [feature]
     }
 
-
     return new_doc
 
 def process_file(filename):
@@ -27,6 +26,11 @@ def process_file(filename):
 def save_doc(doc, name,  basepath):
     filename = os.path.join(basepath, name +'.geojson')
 
+    try:
+        os.mkdir(basepath)
+    except OSError:
+        pass
+
     with open(filename, 'w') as f:
         f.write(json.dumps(doc))
 
@@ -36,8 +40,8 @@ def get_name(doc):
     return '-'.join(doc['features'][0]['properties']['Name'].lower().split())
 
 def process_filelist(filelist, basepath):
-    doc_list = itertools.chain.from_iterable(itertools.imap(process_file, filelist))
-    name_list = map(get_name, doc_list)
+    doc_list = list(itertools.chain.from_iterable(itertools.imap(process_file, filelist)))
+    name_list = itertools.imap(get_name, doc_list)
 
     save_doc_ = functools.partial(save_doc, basepath=basepath)
     map(save_doc_, doc_list, name_list)
